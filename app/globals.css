@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, serif;
+
+  --color-paper: #eef1f7;
+  --color-paper-deep: #dde3ef;
+  --color-ink: #0e1530;
+  --color-ink-soft: #4b5479;
+  --color-brand: #4338ca;
+  --color-brand-600: #4338ca;
+  --color-brand-700: #3730a3;
+  --color-brand-800: #1e1b4b;
+  --color-brand-50: #eef0ff;
+  --color-brand-100: #dbe0ff;
+  --color-accent: #06b6d4;
+  --color-accent-50: #ecfeff;
+  --color-line: #cdd3e3;
+  --color-mist: #e3e7f3;
+  --color-positive: #0f766e;
+
+  --radius: 0.75rem;
+}
+
+:root {
+  color-scheme: light;
+}
+
+@layer base {
+  html {
+    background: var(--color-paper);
+  }
+  body {
+    background:
+      radial-gradient(880px 520px at 92% -160px, #c7d2fe 0%, rgba(199, 210, 254, 0) 62%),
+      radial-gradient(720px 460px at 2% -120px, #cffafe 0%, rgba(207, 250, 254, 0) 58%),
+      var(--color-paper);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--color-brand-100);
+    color: var(--color-brand-800);
+  }
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" on, "lnum" on;
+  }
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer utilities {
+  .card {
+    background: #ffffff;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius);
+    box-shadow:
+      0 1px 2px rgba(14, 21, 48, 0.05),
+      0 22px 44px -28px rgba(55, 48, 163, 0.5);
+  }
+  .btn-primary {
+    background: var(--color-brand-700);
+    color: #fff;
+    transition:
+      transform 0.12s ease,
+      background 0.15s ease,
+      box-shadow 0.15s ease;
+    box-shadow: 0 12px 28px -14px rgba(55, 48, 163, 0.7);
+  }
+  .btn-primary:hover {
+    background: var(--color-brand-800);
+  }
+  .btn-primary:active {
+    transform: translateY(1px);
+  }
+  .btn-primary:disabled {
+    opacity: 0.5;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+  .btn-ghost {
+    border: 1px solid var(--color-line);
+    background: #fff;
+    color: var(--color-ink);
+    transition:
+      border-color 0.15s ease,
+      background 0.15s ease;
+  }
+  .btn-ghost:hover {
+    border-color: var(--color-brand-100);
+    background: var(--color-mist);
+  }
+  .field {
+    width: 100%;
+    border: 1px solid var(--color-line);
+    border-radius: 0.5rem;
+    background: #fff;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.95rem;
+    color: var(--color-ink);
+    outline: none;
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+  .field:focus {
+    border-color: var(--color-brand);
+    box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.18);
+  }
+}
