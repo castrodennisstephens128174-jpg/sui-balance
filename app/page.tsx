@@ -25,6 +25,7 @@ export default function BalanceCheckerPage() {
   const [customCoin, setCustomCoin] = useState<CoinBalance | null>(null);
   const [customInput, setCustomInput] = useState('');
   const [customLoading, setCustomLoading] = useState(false);
+  const [addressError, setAddressError] = useState<string | null>(null);
 
   useEffect(() => {
     if (account?.address) setQuery(account.address);
@@ -90,7 +91,11 @@ export default function BalanceCheckerPage() {
   async function handleCheck(e: React.FormEvent) {
     e.preventDefault();
     const next = query.trim();
-    if (!isValidSuiAddress(next)) return;
+    if (!isValidSuiAddress(next)) {
+      setAddressError('Address must start with 0x and be 32–66 hex chars.');
+      return;
+    }
+    setAddressError(null);
     setResolved(next);
   }
 
@@ -160,10 +165,15 @@ export default function BalanceCheckerPage() {
               <input
                 id="addr"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  if (addressError) setAddressError(null);
+                }}
                 placeholder="0x0000…0000"
                 spellCheck={false}
                 autoComplete="off"
+                aria-invalid={addressError ? true : undefined}
+                aria-describedby={addressError ? 'addr-error' : undefined}
                 className="field tnum"
               />
               <Button type="submit" disabled={loading || !isValidSuiAddress(query.trim())}>
@@ -171,6 +181,11 @@ export default function BalanceCheckerPage() {
                 {loading ? 'Reading…' : 'Check'}
               </Button>
             </div>
+            {addressError && (
+              <p id="addr-error" role="alert" className="text-sm text-rose-700">
+                {addressError}
+              </p>
+            )}
           </form>
 
           {error && (
