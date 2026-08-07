@@ -1,7 +1,7 @@
 'use client';
 
 import { useCurrentAccount, useSuiClient, useSuiClientQuery } from '@mysten/dapp-kit';
-import { Search, Wallet } from 'lucide-react';
+import { Check, Copy, Search, Wallet } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { SUI_COIN_TYPE, getCoinMetadata, type CoinBalance, type CoinMetadata } from '@/lib/sui';
 import { Header } from '@/ui/components/Header';
@@ -26,6 +26,7 @@ export default function BalanceCheckerPage() {
   const [customInput, setCustomInput] = useState('');
   const [customLoading, setCustomLoading] = useState(false);
   const [addressError, setAddressError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (account?.address) setQuery(account.address);
@@ -204,7 +205,7 @@ export default function BalanceCheckerPage() {
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="text-xs uppercase tracking-[0.16em] text-ink-soft">Resolved</p>
-                    <p className="mt-1 text-sm text-ink-soft">
+                    <p className="mt-1 flex items-center gap-2 text-sm text-ink-soft">
                       <a
                         href={explorerAddress(resolved)}
                         target="_blank"
@@ -213,6 +214,23 @@ export default function BalanceCheckerPage() {
                       >
                         {shortAddress(resolved, 10, 6)}
                       </a>
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          try {
+                            await navigator.clipboard.writeText(resolved);
+                            setCopied(true);
+                            window.setTimeout(() => setCopied(false), 1500);
+                          } catch {
+                            setCopied(false);
+                          }
+                        }}
+                        aria-label={copied ? 'Copied' : 'Copy address'}
+                        title={copied ? 'Copied' : 'Copy address'}
+                        className="inline-flex h-7 w-7 items-center justify-center rounded-full text-ink-soft hover:bg-paper hover:text-ink"
+                      >
+                        {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      </button>
                     </p>
                   </div>
                   <div className="text-right">
