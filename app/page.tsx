@@ -16,6 +16,8 @@ import {
 } from '@/ui/format';
 import { isValidSuiAddress } from '@mysten/sui/utils';
 
+const LAST_ADDRESS_KEY = 'sui-balance:lastAddress';
+
 export default function BalanceCheckerPage() {
   const account = useCurrentAccount();
   const suiClient = useSuiClient();
@@ -29,7 +31,19 @@ export default function BalanceCheckerPage() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (account?.address) setQuery(account.address);
+    if (typeof window === 'undefined') return;
+    const saved = window.localStorage.getItem(LAST_ADDRESS_KEY);
+    if (saved && saved.length > 0) {
+      setQuery(saved);
+      setResolved(saved);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (account?.address) {
+      setQuery(account.address);
+      setAddressError(null);
+    }
   }, [account?.address]);
 
   const ownBalances = useSuiClientQuery(
@@ -98,6 +112,9 @@ export default function BalanceCheckerPage() {
     }
     setAddressError(null);
     setResolved(next);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(LAST_ADDRESS_KEY, next);
+    }
   }
 
   async function handleCustomCheck(e: React.FormEvent) {
